@@ -1,18 +1,15 @@
-from flask import Flask,render_template
-import json
+from flask import Flask, render_template
 import requests
 
-app =Flask(__name__)
-@app.route('/')
-def getMeme():
-    url="http://meme-api.com/gimme"
-    response =json.loads(requests.request("GET",url).text)
-    meme_large=response['preview'][-2]
-    subbreddit =response['subreddit']
-    return meme_large,subbreddit
-def index():
-    meme_pic,subrredit =getMeme()
-    return render_template('index.html',meme_pic=meme_pic,subrredit=subrredit)
+app = Flask(__name__)
 
-if __name__=="__main__":
+@app.route('/')
+def index():
+    url = "http://meme-api.com/gimme"
+    response = requests.get(url).json()
+    meme_pic = response['preview'][-1]  # Choose the image resolution you want
+    subreddit = response['subreddit']
+    return render_template('index.html', meme_pic=meme_pic, subreddit=subreddit)
+
+if __name__ == "__main__":
     app.run(debug=True)
